@@ -22,7 +22,7 @@ func (g *IPSET) Match(metadata *C.Metadata) bool {
 	}
 	ipset, _ := ipset.New()
 	err := ipset.Test(g.set, ip.String())
-	return err != nil && err.Error() == "0"
+	return err == nil
 }
 
 func (g *IPSET) Adapter() string {
