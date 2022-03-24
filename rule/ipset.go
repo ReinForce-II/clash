@@ -37,6 +37,10 @@ func (g *IPSET) ShouldResolveIP() bool {
 	return !g.noResolveIP
 }
 
+func (g *IPSET) ShouldFindProcess() bool {
+	return false
+}
+
 func NewIPSET(set string, adapter string, noResolveIP bool) *IPSET {
 	ipset := &IPSET{
 		set:         set,
