@@ -61,6 +61,12 @@ func HandleConn(c net.Conn, in chan<- C.ConnContext, cache *cache.Cache) {
 
 			request.RequestURI = ""
 
+			if isUpgradeRequest(request) {
+				handleUpgrade(conn, request, in)
+
+				return // hijack connection
+			}
+
 			removeHopByHopHeaders(request.Header)
 			removeExtraHTTPHostPort(request)
 
@@ -103,7 +109,7 @@ func authenticate(request *http.Request, cache *cache.Cache) *http.Response {
 			return resp
 		}
 
-		var authed interface{}
+		var authed any
 		if authed = cache.Get(credential); authed == nil {
 			user, pass, err := decodeBasicProxyAuthorization(credential)
 			authed = err == nil && authenticator.Verify(user, pass)
